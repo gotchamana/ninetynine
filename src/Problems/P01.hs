@@ -8,8 +8,6 @@ Part of Ninety-Nine Haskell "Problems".  Some solutions are in "Solutions.P01".
 -}
 module Problems.P01 (myLast) where
 
-import qualified Solutions.P01 as Solution
-
 -- | Find the last element of a list.
 --
 -- === Examples
@@ -23,4 +21,6 @@ import qualified Solutions.P01 as Solution
 -- >>> myLast []
 -- Nothing
 myLast :: [a] -> Maybe a
-myLast = Solution.myLast
+myLast [] = Nothing
+myLast [x] = Just x
+myLast (_ : xs) = myLast xs

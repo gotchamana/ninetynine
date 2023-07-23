@@ -8,8 +8,6 @@ Part of Ninety-Nine Haskell "Problems".  Some solutions are in "Solutions.P03".
 -}
 module Problems.P03 (elementAt) where
 
-import qualified Solutions.P03 as Solution
-
 -- | Find the @k@th element of a list.
 -- The first element in the list is number 1.
 --
@@ -24,4 +22,8 @@ import qualified Solutions.P03 as Solution
 -- >>> elementAt [1,2] 3
 -- Nothing
 elementAt :: [a] -> Int -> Maybe a
-elementAt = Solution.elementAt
+elementAt [] _ = Nothing
+elementAt (x : xs) n
+    | n < 1 = Nothing
+    | n == 1 = Just x
+    | otherwise = elementAt xs (n - 1)

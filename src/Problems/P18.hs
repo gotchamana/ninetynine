@@ -8,8 +8,6 @@ Part of Ninety-Nine Haskell "Problems".  Some solutions are in "Solutions.P18".
 -}
 module Problems.P18 (slice) where
 
-import qualified Solutions.P18 as Solution
-
 -- | Extract a slice from a list.
 --
 -- Given two indices, @i@ and @k@, the slice is the list containing the elements
@@ -21,4 +19,4 @@ import qualified Solutions.P18 as Solution
 -- >>> slice "abcdefghijk" 3 7
 -- "cdefg"
 slice :: [a] -> Int -> Int -> [a]
-slice = Solution.slice
+slice xs i k = take (k - i + 1) . drop (i - 1) $ xs

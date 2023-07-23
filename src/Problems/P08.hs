@@ -8,8 +8,6 @@ Part of Ninety-Nine Haskell "Problems".  Some solutions are in "Solutions.P08".
 -}
 module Problems.P08 (compress) where
 
-import qualified Solutions.P08 as Solution
-
 -- | Eliminate consecutive duplicates of list elements.
 --
 -- If a list contains repeated elements,
@@ -21,4 +19,7 @@ import qualified Solutions.P08 as Solution
 -- >>> compress "aaaabccaadeeee"
 -- "abcade"
 compress :: Eq a => [a] -> [a]
-compress = Solution.compress
+compress = foldr f []
+  where
+    f e [] = [e]
+    f e acc@(x : _) = if e == x then acc else e : acc

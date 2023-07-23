@@ -8,7 +8,8 @@ Part of Ninety-Nine Haskell "Problems".  Some solutions are in "Solutions.P09".
 -}
 module Problems.P09 (pack) where
 
-import qualified Solutions.P09 as Solution
+import Data.List.NonEmpty (NonEmpty ((:|)), (<|))
+import Data.List.NonEmpty qualified as NE
 
 -- | Pack consecutive duplicates of list elements into sublists.
 -- If a list contains repeated elements, they should be placed in separate sublists.
@@ -18,4 +19,7 @@ import qualified Solutions.P09 as Solution
 -- >>> pack "aaaabccaadeeee"
 -- ["aaaa","b","cc","aa","d","eeee"]
 pack :: Eq a => [a] -> [[a]]
-pack = Solution.pack
+pack = map NE.toList . foldr f []
+  where
+    f e [] = [e :| []]
+    f e acc@(xs@(x :| _) : xss) = if e == x then (e <| xs) : xss else (e :| []) : acc

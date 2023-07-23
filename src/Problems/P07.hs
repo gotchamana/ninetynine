@@ -9,7 +9,6 @@ Part of Ninety-Nine Haskell "Problems".  Some solutions are in "Solutions.P07".
 module Problems.P07 (flatten, NestedList (..)) where
 
 import           Problems.Lists
-import qualified Solutions.P07  as Solution
 
 -- | Transform a list, possibly holding lists as elements,
 -- into a "flat" list by replacing each list with its elements recursively.
@@ -25,4 +24,5 @@ import qualified Solutions.P07  as Solution
 -- >>> flatten $ List []
 -- []
 flatten :: NestedList a -> [a]
-flatten = Solution.flatten
+flatten (Elem x) = [x]
+flatten (List xs) = concatMap flatten xs

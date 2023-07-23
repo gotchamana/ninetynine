@@ -8,7 +8,7 @@ Part of Ninety-Nine Haskell "Problems".  Some solutions are in "Solutions.P04".
 -}
 module Problems.P04 (myLength) where
 
-import qualified Solutions.P04 as Solution
+import Data.Foldable (Foldable(foldl'))
 
 -- | Find the number of elements of a list.
 --
@@ -20,4 +20,4 @@ import qualified Solutions.P04 as Solution
 -- >>> myLength "Hello, world!"
 -- 13
 myLength :: [a] -> Int
-myLength = Solution.myLength
+myLength = foldl' (\acc _ -> acc + 1) 0

@@ -8,8 +8,9 @@ Part of Ninety-Nine Haskell "Problems".  Some solutions are in "Solutions.P11".
 -}
 module Problems.P11 (encodeModified) where
 
-import           Problems.Lists
-import qualified Solutions.P11  as Solution
+import Data.List.NonEmpty (NonEmpty ((:|)), group)
+import Data.List.NonEmpty qualified as NE
+import Problems.Lists (Encoding (..))
 
 {- |
 Modify the 'Problems.P10.encode' function in such a way that
@@ -22,4 +23,8 @@ Only elements with duplicates are transferred as @('Multiple' n x)@ values.
 [Multiple 4 'a',Single 'b',Multiple 2 'c',Multiple 2 'a',Single 'd',Multiple 4 'e']
 -}
 encodeModified :: Eq a => [a] -> [Encoding a]
-encodeModified = Solution.encodeModified
+encodeModified = map f . group
+  where
+    f xs@(x :| _) =
+        let len = NE.length xs
+         in if len > 1 then Multiple len x else Single x

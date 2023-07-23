@@ -8,7 +8,7 @@ Part of Ninety-Nine Haskell "Problems".  Some solutions are in "Solutions.P10".
 -}
 module Problems.P10 (encode) where
 
-import qualified Solutions.P10 as Solution
+import Problems.P09 (pack)
 
 {- |
 Use the 'Problems.P09.pack' function to implement
@@ -23,4 +23,4 @@ where @n@ is the number of duplicates of the element @e@.
 [(4,'a'),(1,'b'),(2,'c'),(2,'a'),(1,'d'),(4,'e')]
 -}
 encode :: Eq a => [a] -> [(Int, a)]
-encode = Solution.encode
+encode = map (\xs -> (length xs, head xs)) . pack

@@ -8,8 +8,6 @@ Part of Ninety-Nine Haskell "Problems".  Some solutions are in "Solutions.P16".
 -}
 module Problems.P16 (dropEvery) where
 
-import qualified Solutions.P16 as Solution
-
 -- | Drop every @n@th element from a list.
 --
 -- === Examples
@@ -17,4 +15,10 @@ import qualified Solutions.P16 as Solution
 -- >>> dropEvery "abcdefghik" 3
 -- "abdeghk"
 dropEvery :: [a] -> Int -> [a]
-dropEvery = Solution.dropEvery
+dropEvery xs n
+    | n <= 0 = xs
+    | n == 1 = []
+    | otherwise = go xs n
+  where
+    go [] _ = []
+    go (x' : xs') n' = if n' == 1 then go xs' n else x' : go xs' (n' - 1)

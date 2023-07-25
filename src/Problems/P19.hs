@@ -8,8 +8,6 @@ Part of Ninety-Nine Haskell "Problems".  Some solutions are in "Solutions.P19".
 -}
 module Problems.P19 (rotate) where
 
-import qualified Solutions.P19 as Solution
-
 -- | Rotate a list @n@ places to the left.
 --
 -- === Examples
@@ -20,4 +18,11 @@ import qualified Solutions.P19 as Solution
 -- >>> rotate "abcdefgh" (-2)
 -- "ghabcdef"
 rotate :: [a] -> Int -> [a]
-rotate = Solution.rotate
+rotate [] _ = []
+rotate xs n =
+    if n == 0 || n' == 0
+        then xs
+        else let (ls, rs) = splitAt n' xs in rs <> ls
+  where
+    len = length xs
+    n' = n `mod` len

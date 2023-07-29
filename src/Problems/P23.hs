@@ -6,7 +6,7 @@ Maintainer: dev@chungyc.org
 
 Part of Ninety-Nine Haskell "Problems".  Some solutions are in "Solutions.P23".
 -}
-module Problems.P23 (randomSelect) where
+module Problems.P23 (randomSelect, shuffle) where
 
 import Control.Monad (forM_)
 import Control.Monad.ST (ST, runST)

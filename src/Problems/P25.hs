@@ -8,8 +8,11 @@ Part of Ninety-Nine Haskell "Problems".  Some solutions are in "Solutions.P25".
 -}
 module Problems.P25 (randomPermute) where
 
-import qualified Solutions.P25 as Solution
-import           System.Random
+import Control.Monad (liftM2)
+import Control.Monad.ST (ST, runST)
+import Data.Array.ST (STArray, getElems, newListArray)
+import Problems.P23 (shuffle)
+import System.Random (RandomGen)
 
 -- $setup
 -- >>> import Data.List (unfoldr)
@@ -26,5 +29,7 @@ import           System.Random
 --
 -- >>> fst . randomPermute "abcdef" <$> newStdGen
 -- "dcaebf"
-randomPermute :: RandomGen g => [a] -> g -> ([a], g)
-randomPermute = Solution.randomPermute
+randomPermute :: forall a g. RandomGen g => [a] -> g -> ([a], g)
+randomPermute xs g = runST $ do
+    arr <- newListArray (1, length xs) xs :: ST s (STArray s Int a)
+    liftM2 (flip (,)) (shuffle arr g) (getElems arr)

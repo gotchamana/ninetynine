@@ -8,8 +8,6 @@ Part of Ninety-Nine Haskell "Problems".  Some solutions are in "Solutions.P21".
 -}
 module Problems.P21 (insertAt) where
 
-import qualified Solutions.P21 as Solution
-
 -- | Insert an element at a given position into a list.
 --
 -- === Examples
@@ -17,4 +15,8 @@ import qualified Solutions.P21 as Solution
 -- >>> insertAt 'X' "abcd" 2
 -- "aXbcd"
 insertAt :: a -> [a] -> Int -> [a]
-insertAt = Solution.insertAt
+insertAt x [] _ = [x]
+insertAt x xs@(x' : xs') n =
+    if n <= 1
+        then x : xs
+        else x' : insertAt x xs' (n - 1)

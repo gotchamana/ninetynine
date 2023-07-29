@@ -8,8 +8,8 @@ Part of Ninety-Nine Haskell "Problems".  Some solutions are in "Solutions.P24".
 -}
 module Problems.P24 (randomDraw) where
 
-import qualified Solutions.P24 as Solution
-import           System.Random
+import Problems.P23 (randomSelect)
+import System.Random
 
 -- | Draw \(n\) different random numbers from the set \( \{ k \,|\, 1 \leq k \leq m \} \).
 --
@@ -24,4 +24,4 @@ import           System.Random
 -- >>> fst . randomDraw 6 49 <$> newStdGen
 -- [17,7,1,18,13,3]
 randomDraw :: RandomGen g => Int -> Int -> g -> ([Int], g)
-randomDraw = Solution.randomDraw
+randomDraw n m = randomSelect [1 .. m] n

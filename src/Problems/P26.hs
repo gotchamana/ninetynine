@@ -8,7 +8,6 @@ Part of Ninety-Nine Haskell "Problems".  Some solutions are in "Solutions.P26".
 -}
 module Problems.P26 (combinations) where
 
-import qualified Solutions.P26 as Solution
 
 -- $setup
 -- >>> import Data.List (sort)
@@ -31,4 +30,15 @@ But we want to really generate all the possibilities in a list.
 ["abc","abd","abe",...]
 -}
 combinations :: Int -> [a] -> [[a]]
-combinations = Solution.combinations
+combinations n xs = go n xs (length xs)
+  where
+    go n' ys len
+        | n' <= 0 = [[]]
+        | n' > len = []
+        | otherwise =
+            concatMap
+                (\(x, xs') -> (x :) <$> go (n' - 1) xs' (len - 1))
+                (take (len - n' + 1) . tailsWithElem $ ys)
+
+tailsWithElem :: [a] -> [(a, [a])]
+tailsWithElem = fst . foldr (\e ~(xs, ys) -> ((e, ys) : xs, e : ys)) ([], [])

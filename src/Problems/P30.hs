@@ -8,7 +8,7 @@ Part of Ninety-Nine Haskell "Problems".  Some solutions are in "Solutions.P30".
 -}
 module Problems.P30 (fibonacci') where
 
-import qualified Solutions.P30 as Solution
+import Data.List (transpose)
 
 {- |
 Consider the following matrix equation, where \(F(n)\) is the \(n\)th Fibonacci number:
@@ -98,4 +98,22 @@ With exponentiation by squaring, \(x^n\) can be computed with \(O(\log n)\) mult
 E.g., since \(x^{39} = (((((((x^2 )^2 )^2) x)^2) x)^2 ) x\), \(x^{39}\) can be computed with 8 multiplications instead of 38.
 -}
 fibonacci' :: Integral a => a -> a
-fibonacci' = Solution.fibonacci'
+fibonacci' n
+  | n <= 0 = 0
+  | n == 1 || n == 2 = 1
+  | otherwise = head $ head $ smul (fromIntegral n - 2) [[1, 1], [1, 0]] `mul` [[1], [1]]
+
+mul :: Integral a => [[a]] -> [[a]] -> [[a]]
+mul m1 m2 =
+    let m2' = transpose m2
+     in map (\m -> map (sum . zipWith (*) m) m2') m1
+
+smul :: Integral a => Int -> [[a]] -> [[a]]
+smul n m =
+    if n <= 1
+        then m
+        else
+            let (q, r) = n `divMod` 2
+                m' = m `mul` m
+                m'' = smul q m'
+             in if r == 0 then m'' else m'' `mul` m

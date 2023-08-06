@@ -8,7 +8,9 @@ Part of Ninety-Nine Haskell "Problems".  Some solutions are in "Solutions.P29".
 -}
 module Problems.P29 (fibonacci) where
 
-import qualified Solutions.P29 as Solution
+import Control.Monad (liftM2, replicateM_)
+import Control.Monad.ST.Strict (runST)
+import Data.STRef.Strict (newSTRef, readSTRef, writeSTRef)
 
 {- |
 For \(n > 2\), the \(n\)th Fibonacci number \(F(n)\) is the sum of \(F(n-1)\) and \(F(n-2)\),
@@ -30,4 +32,17 @@ Write a function to compute the \(n\)th Fibonacci number.
 [1,1,2,3,5,8,13,21,34,55]
 -}
 fibonacci :: Integral a => a -> a
-fibonacci = Solution.fibonacci
+fibonacci n
+    | n <= 0 = 0
+    | n == 1 || n == 2 = 1
+    | otherwise = runST $ do
+        ref <- newSTRef 1
+        ref2 <- newSTRef 1
+
+        replicateM_ (fromIntegral n - 2) $ do
+            v <- liftM2 (+) (readSTRef ref) (readSTRef ref2)
+
+            readSTRef ref2 >>= writeSTRef ref
+            writeSTRef ref2 v
+
+        readSTRef ref2

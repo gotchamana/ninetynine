@@ -8,7 +8,10 @@ Part of Ninety-Nine Haskell "Problems".  Some solutions are in "Solutions.P27".
 -}
 module Problems.P27 (disjointGroups) where
 
-import qualified Solutions.P27 as Solution
+import Data.IntMap.Strict qualified as Map
+import Data.List (foldl')
+import Problems.P26 (combinations)
+import Data.Bifunctor (Bifunctor(second))
 
 -- $setup
 -- >>> import Data.List (sort)
@@ -38,4 +41,17 @@ under the term [/multinomial coefficients/](https://brilliant.org/wiki/multinomi
 756
 -}
 disjointGroups :: [Int] -> [a] -> [[[a]]]
-disjointGroups = Solution.disjointGroups
+disjointGroups [] _ = [[]]
+disjointGroups (n : ns) xs =
+    if n < 0
+        then []
+        else concatMap (\(ls, rs) -> (ls :) <$> disjointGroups ns rs) (combinationsWithLeft n xs)
+
+combinationsWithLeft :: Int -> [a] -> [([a], [a])]
+combinationsWithLeft n xs =
+    let entries = zip [0 ..] xs
+        intMap = Map.fromDistinctAscList entries
+        coms = combinations n entries
+     in map (addLeft intMap) coms
+  where
+    addLeft intMap = second Map.elems . foldl' (\(!cs, !m) (k, v) -> (v : cs, Map.delete k m)) ([], intMap)

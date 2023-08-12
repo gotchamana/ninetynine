@@ -8,7 +8,7 @@ Part of Ninety-Nine Haskell "Problems".  Some solutions are in "Solutions.P32".
 -}
 module Problems.P32 (myGCD) where
 
-import qualified Solutions.P32 as Solution
+import GHC.Stack (HasCallStack)
 
 -- | Determine the greatest common divisor of two positive integer numbers.
 -- Use [Euclid's algorithm](https://en.wikipedia.org/wiki/Euclidean_algorithm).
@@ -23,5 +23,14 @@ import qualified Solutions.P32 as Solution
 --
 -- >>> myGCD 221 559
 -- 13
-myGCD :: Integral a => a -> a -> a
-myGCD = Solution.myGCD
+myGCD :: (HasCallStack, Integral a) => a -> a -> a
+myGCD a b =
+    if a == 0 || b == 0
+        then error "Invalid argument"
+        else
+            let a' = abs a
+                b' = abs b
+                a'' = max a' b'
+                b'' = min a' b'
+                r = a'' `mod` b''
+             in if r == 0 then b'' else myGCD b'' r

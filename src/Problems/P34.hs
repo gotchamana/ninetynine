@@ -8,7 +8,7 @@ Part of Ninety-Nine Haskell "Problems".  Some solutions are in "Solutions.P34".
 -}
 module Problems.P34 (totient) where
 
-import qualified Solutions.P34 as Solution
+import Problems.P33 (coprime)
 
 -- | Calculate Euler's totient function \(\phi(m)\).
 --
@@ -23,4 +23,7 @@ import qualified Solutions.P34 as Solution
 -- >>> totient 10
 -- 4
 totient :: Integral a => a -> a
-totient = Solution.totient
+totient n
+    | n < 1 = 0
+    | n == 1 = 1
+    | otherwise = fromIntegral . length . filter (coprime n) $ [1 .. n]

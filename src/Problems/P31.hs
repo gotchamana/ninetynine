@@ -8,8 +8,6 @@ Part of Ninety-Nine Haskell "Problems".  Some solutions are in "Solutions.P31".
 -}
 module Problems.P31 (isPrime) where
 
-import qualified Solutions.P31 as Solution
-
 -- | Determine whether a given integer number is prime.
 --
 -- === Examples
@@ -20,4 +18,6 @@ import qualified Solutions.P31 as Solution
 -- >>> isPrime 15
 -- False
 isPrime :: Integral a => a -> Bool
-isPrime = Solution.isPrime
+isPrime n = (n > 1) && not (any isDivisible [2 .. truncate . sqrt @Double . fromIntegral $ n])
+  where
+    isDivisible factor = let (q, r) = n `divMod` factor in r == 0 && q /= 1

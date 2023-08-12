@@ -8,8 +8,6 @@ Part of Ninety-Nine Haskell "Problems".  Some solutions are in "Solutions.P33".
 -}
 module Problems.P33 (coprime) where
 
-import qualified Solutions.P33 as Solution
-
 -- | Determine whether two positive integer numbers are coprime.
 -- Two numbers are coprime if their greatest common divisor equals 1.
 --
@@ -21,4 +19,4 @@ import qualified Solutions.P33 as Solution
 -- >>> coprime 1173 1547
 -- False
 coprime :: Integral a => a -> a -> Bool
-coprime = Solution.coprime
+coprime a b = gcd a b == 1

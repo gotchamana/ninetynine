@@ -8,7 +8,7 @@ Part of Ninety-Nine Haskell "Problems".  Some solutions are in "Solutions.P37".
 -}
 module Problems.P37 (totient') where
 
-import qualified Solutions.P37 as Solution
+import Problems.P36 (primeFactorsMultiplicity)
 
 -- | Calculate Euler's totient function \(\phi(m)\).
 -- See 'Problems.P34.totient' for the definition of Euler's totient function.
@@ -31,4 +31,4 @@ import qualified Solutions.P37 as Solution
 -- >>> totient' 10
 -- 4
 totient' :: Integral a => a -> a
-totient' = Solution.totient'
+totient' = product . map (\(p, k) -> p ^ (k - 1) * (p - 1)) . primeFactorsMultiplicity

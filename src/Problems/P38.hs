@@ -6,9 +6,18 @@ Maintainer: dev@chungyc.org
 
 Part of Ninety-Nine Haskell "Problems".  Some solutions are in "Solutions.P38".
 -}
+{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE StrictData #-}
+
 module Problems.P38 (highlyTotientNumbers) where
 
-import qualified Solutions.P38 as Solution
+import Control.Applicative (Alternative ((<|>)))
+import Control.Monad (guard)
+import Data.Function (on)
+import Data.IntMap.Strict (IntMap)
+import Data.IntMap.Strict qualified as Map
+import Problems.P37 (totient')
+import Safe (maximumByMay)
 
 {- |
 It is possible for more than one number \(x\) to have the same totient number \(\phi(x)\).
@@ -34,4 +43,27 @@ Compare the prime factorizations between \(\phi(x)\) and \(x\),
 and devise a modification of the former so that it must be larger than the latter.
 -}
 highlyTotientNumbers :: Integral a => [a]
-highlyTotientNumbers = Solution.highlyTotientNumbers
+highlyTotientNumbers = go S{nFreq = Map.singleton 1 1, x = 2, preBound = 1, maxNFreq = Nothing}
+  where
+    go state@S{..} =
+        let lowerBound = ceiling @Double @Int (sqrt (fromIntegral x / 2))
+            (lowerMap, pivot, largerMap) = Map.splitLookup lowerBound nFreq
+            usedMap = if preBound < lowerBound then maybe largerMap (\f -> Map.insert lowerBound f largerMap) pivot else nFreq
+            freq = Map.insertWith (+) (totient' x) 1 usedMap
+            maxEntry = do
+                guard $ preBound < lowerBound
+
+                entry@(n, f) <- maximumByMay (compare `on` snd) $ Map.toList lowerMap
+
+                case maxNFreq of
+                    Just (n', f') -> if n > n' && f > f' then return entry else Nothing
+                    Nothing -> return entry
+            newState = state{nFreq = freq, x = x + 1, preBound = lowerBound, maxNFreq = maxEntry <|> maxNFreq}
+         in maybe (go newState) (\(n, _) -> fromIntegral n : go newState) maxEntry
+
+data S = S
+    { nFreq :: IntMap Int
+    , x :: Int
+    , preBound :: Int
+    , maxNFreq :: Maybe (Int, Int)
+    }

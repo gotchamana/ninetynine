@@ -50,6 +50,7 @@ library:
   - random
   - text
   - transformers
+  - safe
 
 executables:
   generate-support:

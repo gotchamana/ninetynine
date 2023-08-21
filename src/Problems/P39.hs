@@ -8,8 +8,6 @@ Part of Ninety-Nine Haskell "Problems".  Some solutions are in "Solutions.P39".
 -}
 module Problems.P39 (primesR, primes) where
 
-import qualified Solutions.P39 as Solution
-
 -- | Given a range of integers by its lower and upper limit, inclusive,
 -- construct a list of all prime numbers in that range.
 --
@@ -18,7 +16,7 @@ import qualified Solutions.P39 as Solution
 -- >>> primesR 10 20
 -- [11,13,17,19]
 primesR :: Integral a => a -> a -> [a]
-primesR = Solution.primesR
+primesR lower upper = takeWhile (<= upper) . filter (>= lower) $ primes
 
 -- | Construct the list of all prime numbers.
 --
@@ -27,4 +25,15 @@ primesR = Solution.primesR
 -- >>> take 5 primes
 -- [2,3,5,7,11]
 primes :: Integral a => [a]
-primes = Solution.primes
+primes = 2 : go primes [3, 5 ..]
+  where
+    go (x : xs) ys =
+        let xs' = iterate (x +) (x * x)
+            ys' = next xs' ys
+         in head ys' : go xs (tail ys')
+    go _ _ = error "Prime number list is infinite"
+    next xs'@(x : xs) ys'@(y : ys)
+        | y < x = y : next xs' ys
+        | y > x = next xs ys'
+        | otherwise = next xs ys
+    next _ _ = []

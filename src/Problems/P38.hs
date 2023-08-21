@@ -48,8 +48,11 @@ highlyTotientNumbers = go S{nFreq = Map.singleton 1 1, x = 2, preBound = 1, maxN
     go state@S{..} =
         let lowerBound = ceiling @Double @Int (sqrt (fromIntegral x / 2))
             (lowerMap, pivot, largerMap) = Map.splitLookup lowerBound nFreq
-            usedMap = if preBound < lowerBound then maybe largerMap (\f -> Map.insert lowerBound f largerMap) pivot else nFreq
-            freq = Map.insertWith (+) (totient' x) 1 usedMap
+            usedMap =
+                if preBound < lowerBound
+                    then maybe largerMap (\f -> Map.insert lowerBound f largerMap) pivot
+                    else nFreq
+            nFreq' = Map.insertWith (+) (totient' x) 1 usedMap
             maxEntry = do
                 guard $ preBound < lowerBound
 
@@ -58,7 +61,7 @@ highlyTotientNumbers = go S{nFreq = Map.singleton 1 1, x = 2, preBound = 1, maxN
                 case maxNFreq of
                     Just (n', f') -> if n > n' && f > f' then return entry else Nothing
                     Nothing -> return entry
-            newState = state{nFreq = freq, x = x + 1, preBound = lowerBound, maxNFreq = maxEntry <|> maxNFreq}
+            newState = state{nFreq = nFreq', x = x + 1, preBound = lowerBound, maxNFreq = maxEntry <|> maxNFreq}
          in maybe (go newState) (\(n, _) -> fromIntegral n : go newState) maxEntry
 
 data S = S
